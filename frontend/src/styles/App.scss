@@ -3,7 +3,8 @@
     align-items: center;
     justify-content: space-between;
     .sidebar {
-        width: 35%;
+        width: 30%;
+        min-width: 300px;
         display: flex;
         flex-direction: column;
         height: 100vh;

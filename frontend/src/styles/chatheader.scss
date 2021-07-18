@@ -21,7 +21,23 @@
             height: 100%;
         }
     }
-    
+
+    .chat-detail {
+        margin-left: 15px;
+        flex: 1;
+        .title {
+            font-weight: 500;
+            margin: 0;
+            margin-bottom: 5px;
+            color: #333333;
+        }
+        .description {
+            margin: 0;
+            color: #00000099;
+            font-size: 15px;
+        }
+    }
+
     .action-buttons {
         color: #919191;
         .icon-block {

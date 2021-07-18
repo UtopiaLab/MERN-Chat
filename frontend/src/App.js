@@ -1,17 +1,24 @@
 import './styles/App.scss';
+import Login from './components/login';
 import ChatBody from './components/chatbody';
 import SideBar from './components/sidebar';
 
 function App() {
   return (
-    <div className="App">
-      <div className="sidebar">
-        <SideBar />
+    <>
+    {false ? (
+      <Login />
+      ) : (
+      <div className="App">
+        <div className="sidebar">
+          <SideBar />
+        </div>
+        <div className="body">
+          <ChatBody />
+        </div>
       </div>
-      <div className="body">
-        <ChatBody />
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 
