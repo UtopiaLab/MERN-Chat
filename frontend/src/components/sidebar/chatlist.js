@@ -1,6 +1,6 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons'; 
-import '../styles/chatlist.scss';
+import '../../styles/chatlist.scss';
 
 const ChatList = () => {
     return (

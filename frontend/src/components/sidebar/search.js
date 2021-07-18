@@ -1,6 +1,6 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
-import '../styles/search.scss';
+import '../../styles/search.scss';
 
 const Search = () => {
     return (
