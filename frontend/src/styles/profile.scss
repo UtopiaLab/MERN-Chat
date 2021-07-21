@@ -22,4 +22,16 @@
             height: 100%;
         }
     }
-  }
+    .action-item {
+        display: flex;
+        .logout {
+            opacity: 0.6;
+            color: #000000;
+        }
+        &:hover {
+            opacity: 0.9;
+            cursor: pointer;
+        }
+    } 
+}
+

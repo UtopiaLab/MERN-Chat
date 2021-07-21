@@ -6,7 +6,7 @@ import SideBar from './components/sidebar';
 function App() {
   return (
     <>
-    {false ? (
+    {true ? (
       <Login />
       ) : (
       <div className="App">

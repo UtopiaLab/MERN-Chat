@@ -13,8 +13,13 @@ const Login = () => {
                 <form>
                     <div className="profile-image">
                         <input className="file-upload" type="file" />
-                        <FontAwesomeIcon icon={faUser} />
+                        <FontAwesomeIcon className="icon-block" icon={faUser} />
                     </div>
+                    <div className="profile-name">
+                        <FontAwesomeIcon className="icon-block" icon={faUser} />
+                        <input placeholder="Your Name Here!" type="text" name="name" />
+                    </div>
+                    <input type="submit" className="profile-submit" value="Join Now" />
                 </form>
             </div>
         </div>

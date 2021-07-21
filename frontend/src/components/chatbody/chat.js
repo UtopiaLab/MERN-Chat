@@ -17,7 +17,7 @@ const Chat = () => {
 
             <div className="chat me">
                 <span className="name">
-                    Sample User
+                    You
                 </span>
                 <p className="message">
                     This is a preview of a sample message.
