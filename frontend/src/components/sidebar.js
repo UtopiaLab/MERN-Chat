@@ -2,10 +2,10 @@ import Profile from './sidebar/profile';
 import Search from './sidebar/search';
 import ChatList from './sidebar/chatlist';
 
-const SideBar = () => {
+const SideBar = ({handleLogout}) => {
     return (
         <>
-            <Profile />
+            <Profile handleLogout={handleLogout} />
             <Search />
             <ChatList />
         </>

@@ -5,11 +5,15 @@ import SideBar from './components/sidebar';
 import {BASE_URL, LOGIN} from './utils/apiEndpoints';
 import {postRequest} from './utils/apiRequests';
 import { useState } from 'react';
+import {useCookies} from 'react-cookie';
 
 function App() {
 
+  const [cookies, setCookie, removeCookie] = useCookies(["MERNChat"]);
   const [error, setError] = useState(null);
-  const [userObj, setUserObj] = useState(null);
+  const [userObj, setUserObj] = useState(() => {
+    return cookies.user;
+  });
 
   const handleLogin = async (userData) => {
     const formData = new FormData();
@@ -26,17 +30,23 @@ function App() {
       return false;
     }
 
+    setCookie("user", response);
     setUserObj(response);
+  }
+
+  const handleLogout = () => {
+    removeCookie("user");
+    setUserObj(null);
   }
 
   return (
     <>
-    {true ? (
+    {!(userObj && userObj.sessionId) ? (
       <Login handleLogin={handleLogin} />
       ) : (
       <div className="App">
         <div className="sidebar">
-          <SideBar />
+          <SideBar handleLogout={handleLogout} />
         </div>
         <div className="body">
           <ChatBody />
