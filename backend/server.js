@@ -14,8 +14,12 @@ app.use([
     bodyParser.json(),
     bodyParser.urlencoded({extended: false}),
     Routes
-])
+]);
+
+const io = (module.exports.io = require('socket.io')(server));
+const socketManager = require('./app/socketManager/socketManager');
+io.on("connection", socketManager);
 
 server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-})
+});

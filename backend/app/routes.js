@@ -11,4 +11,4 @@ router.get("/api/user/is-offline/:id", controller.checkIfUserOffline);
 router.post("/api/upload-voice", audioUpload, controller.uploadVoice);
 router.post("/api/upload-image-file", imageMsgFileUpload, controller.uploadImageFile);
 
-module.exports.router;
+module.exports = router;

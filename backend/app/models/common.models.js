@@ -26,4 +26,11 @@ exports.getUserChats = async (senderId, receiverId) => {
     let collection = await db.collection(process.env.MONGODB_CHATS_COLLECTION);
     let res = await collection.find({room: {$all: [senderId, receiverId]}}).toArray();
     return res;
+};
+
+exports.saveChats = async (payload) => {
+    const db = (await M_CONNECT).db(process.env.MONGODB_NAME);
+    let collection = await db.collection(process.env.MONGODB_CHATS_COLLECTION);
+    let res = await collection.insertOne(payload);
+    return res.insertedId;
 }
