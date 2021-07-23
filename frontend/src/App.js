@@ -3,24 +3,44 @@ import Login from './components/login';
 import ChatBody from './components/chatbody';
 import SideBar from './components/sidebar';
 import AuthContext from './contexts/authContext';
-import {BASE_URL, LOGIN} from './utils/apiEndpoints';
-import {postRequest} from './utils/apiRequests';
-import { useState } from 'react';
+import SocketContext from './contexts/socketContext';
+import {BASE_URL, LOGIN, USER_LIST} from './utils/apiEndpoints';
+import {postRequest, getRequest} from './utils/apiRequests';
+import {useState, useReducer} from 'react';
 import {useCookies} from 'react-cookie';
+import io from 'socket.io-client';
+import friendListReducer from './reducers/friendsListReducer';
+
+const initialState = {};
+
+const socket = io.connect("http://localhost:2000", {
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: 10,
+});
 
 function App() {
 
   const [cookies, setCookie, removeCookie] = useCookies(["MERNChat"]);
   const [error, setError] = useState(null);
+  const [recentMsg, setRecentMsg] = useState({});
+  const [recentOnlineFriend, setRecentOnlineFriend] = useState({});
+  const [recentOfflineFriend, setRecentOfflineFriend] = useState({});
   const [userObj, setUserObj] = useState(() => {
     return cookies.user;
   });
+
+  const [friendList, friendsListDispatch] = useReducer(
+    friendListReducer,
+    initialState
+  )
 
   const handleLogin = async (userData) => {
     const formData = new FormData();
     if(userData.file) {
       formData.append("profileImg", userData.file, userData.file.name);
     }
+
     formData.append("payload", JSON.stringify({name: userData.name}));
 
     const response = await postRequest(`${BASE_URL}${LOGIN}`, formData);
@@ -33,6 +53,8 @@ function App() {
 
     setCookie("user", response);
     setUserObj(response);
+    joinUser(response);
+    getFriendsList(response);
   }
 
   const handleLogout = () => {
@@ -40,20 +62,73 @@ function App() {
     setUserObj(null);
   }
 
+  const getFriendsList = async (userData) => {
+    const response = await getRequest(
+      `${BASE_URL}${USER_LIST}/${userData.sessionId}`
+    );
+    if(response.error){
+      setError(response.error);
+      return false;
+    }
+    friendsListDispatch({type: "FRIENDS", payload: response});
+    onlineOfflineUser();
+  }
+
+  const onlineOfflineUser = () => {
+    socket.on("new-online-user", (data) => {
+      friendsListDispatch({type: "NEW_FRIEND", payload: data});
+      setRecentOnlineFriend(data);
+    });
+    socket.on("new-offline-user", (data) => {
+      setRecentOfflineFriend(data);
+    })
+  }
+
+  const joinUser = (userData) => {
+    let initData = {
+      createdAt: userData.createdAt,
+      name: userData.name,
+      profileImg: userData.profileImg,
+      sessionId: userData.sessionId,
+      updatedAt: userData.updatedAt,
+      _id: userData._id
+    };
+    socket.emit("join-user", initData, () => {
+      console.log("User Joined!");
+    });
+
+    socket.on("receive-msg", (data) => {
+      console.log(data);
+      updateRecentMsg(data);
+      setRecentMsg(data);
+    });
+
+    socket.on("user-typing", (data) => {
+      console.log(data);
+      updateRecentMsg(data);
+    });
+  };
+
+  const updateRecentMsg = (data) => {
+    friendsListDispatch({type: "RECENT_MSG", payload: data});
+  };
+
   return (
     <>
     {!(userObj && userObj.sessionId) ? (
       <Login handleLogin={handleLogin} />
       ) : (
         <AuthContext.Provider value={userObj}>
-          <div className="App">
-            <div className="sidebar">
-              <SideBar handleLogout={handleLogout} />
+          <SocketContext.Provider value={socket}>
+            <div className="App">
+              <div className="sidebar">
+                <SideBar handleLogout={handleLogout} />
+              </div>
+              <div className="body">
+                <ChatBody />
+              </div>
             </div>
-            <div className="body">
-              <ChatBody />
-            </div>
-          </div>
+            </SocketContext.Provider>
         </AuthContext.Provider>
       )}
     </>

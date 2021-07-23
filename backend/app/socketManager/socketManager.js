@@ -6,7 +6,8 @@ const {getTime} = require('./../helper');
 module.exports = (socket) => {
     try {
         console.log("Connected!");
-        socket.on("join-user", (data, callBack) => {
+        socket.on("join-user", (data, callback) => {
+            console.log(callback);
             const {createdAt, name, profileImg, sessionId, updatedAt, _id} = data;
             const currentTime = getTime();
             const newUser = {
@@ -23,16 +24,17 @@ module.exports = (socket) => {
                 sessionId,
                 {time: currentTime},
                 (e, r) => {
-                    if(e) return callBack(e);
+                    if(e) return callback(e);
                     console.log("New User Joined!", r);
                     socket.sessionId = sessionId;
                     socket.join(sessionId);
                     socket.broadcast.emit("new-online-user", newUser);
+                    callback();
                 }
             );
         });
 
-        socket.on("send-msg", async (data, callBack) => {
+        socket.on("send-msg", async (data, callback) => {
             const {senderId, receiverId, msg} = data;
             const chatObj = {
                 room: [receiverId, senderId],
@@ -43,7 +45,7 @@ module.exports = (socket) => {
             }
             await saveChats(chatObj);
             io.to(receiverId).emit("receive-msg", chatObj);
-            callBack(chatObj);
+            callback(chatObj);
         });
 
         socket.on("user-typing", async (data, callBack) => {
@@ -56,7 +58,7 @@ module.exports = (socket) => {
                 time: getTime()
             }
             io.to(receiverId).emit("user-typing", chatObj);
-            callBack(data);
+            callback(data);
         });
 
         socket.on("disconnect", () => {
