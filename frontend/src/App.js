@@ -2,6 +2,7 @@ import './styles/App.scss';
 import Login from './components/login';
 import ChatBody from './components/chatbody';
 import SideBar from './components/sidebar';
+import AuthContext from './contexts/authContext';
 import {BASE_URL, LOGIN} from './utils/apiEndpoints';
 import {postRequest} from './utils/apiRequests';
 import { useState } from 'react';
@@ -44,14 +45,16 @@ function App() {
     {!(userObj && userObj.sessionId) ? (
       <Login handleLogin={handleLogin} />
       ) : (
-      <div className="App">
-        <div className="sidebar">
-          <SideBar handleLogout={handleLogout} />
-        </div>
-        <div className="body">
-          <ChatBody />
-        </div>
-      </div>
+        <AuthContext.Provider value={userObj}>
+          <div className="App">
+            <div className="sidebar">
+              <SideBar handleLogout={handleLogout} />
+            </div>
+            <div className="body">
+              <ChatBody />
+            </div>
+          </div>
+        </AuthContext.Provider>
       )}
     </>
   );
