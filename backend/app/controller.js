@@ -58,6 +58,7 @@ exports.getUserChats = async (req, res) => {
   try {
     const {senderId, receiverId} = req.body;
     const chats = await getUserChats(senderId, receiverId);
+    res.status(200).send(chats);
   } catch (ex) {
     res.status(400).send(ex.message);
   }
@@ -68,7 +69,7 @@ exports.uploadVoice = async (req, res) => {
   try {
     let filePath = "";
     if(req.file.filename) {
-      filePath = `${process.env.BASE_PATH}${process.env.AUDIO_PATH}/${req.file.filename}`;
+      filePath = `${process.env.BASE_PATH}:${process.env.PORT}/${process.env.AUDIO_PATH}/${req.file.filename}`;
     }
     res.status(200).send(filePath);
   } catch (ex) {
@@ -81,7 +82,7 @@ exports.uploadImageFile = async (req, res) => {
   try {
     let filePath = "";
     if(req.file.filename) {
-      filePath = `${process.env.BASE_PATH}${process.env.IMAGE_MSG_PATH}/${req.file.filename}`;
+      filePath = `${process.env.BASE_PATH}:${process.env.PORT}/${process.env.IMAGE_MSG_PATH}/${req.file.filename}`;
     }
     res.status(200).send(filePath);
   } catch (ex) {

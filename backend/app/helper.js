@@ -49,4 +49,4 @@ const imageMsgFileStorage = multer.diskStorage({
 exports.imageMsgFileUpload = multer({
     storage: imageMsgFileStorage,
     limits: {fileSize: 1000000},
-}).single("profileImg")
+}).single("imageMsg")

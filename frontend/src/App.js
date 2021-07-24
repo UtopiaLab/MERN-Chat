@@ -7,6 +7,7 @@ import SocketContext from './contexts/socketContext';
 import {BASE_URL, LOGIN, USER_LIST} from './utils/apiEndpoints';
 import {postRequest, getRequest} from './utils/apiRequests';
 import {useState, useReducer, useEffect} from 'react';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {useCookies} from 'react-cookie';
 import io from 'socket.io-client';
 import friendListReducer from './reducers/friendsListReducer';
@@ -128,12 +129,23 @@ function App() {
         <AuthContext.Provider value={userObj}>
           <SocketContext.Provider value={socket}>
             <div className="App">
-              <div className="sidebar">
-                <SideBar handleLogout={handleLogout} friendList={friendList} />
-              </div>
-              <div className="body">
-                <ChatBody />
-              </div>
+              <Router>
+                <div className="sidebar">
+                  <SideBar handleLogout={handleLogout} friendList={friendList} />
+                </div>
+                <Switch>
+                  <Route path="/:id">
+                    <div className="body">
+                      <ChatBody 
+                        updateRecentMsg={updateRecentMsg}
+                        recentMsg={recentMsg}
+                        recentOnlineFriend={recentOnlineFriend}
+                        recentOfflineFriend={recentOfflineFriend}
+                      />
+                    </div>
+                  </Route>
+                </Switch>
+              </Router>
             </div>
             </SocketContext.Provider>
         </AuthContext.Provider>

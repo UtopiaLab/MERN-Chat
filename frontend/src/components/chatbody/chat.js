@@ -1,32 +1,38 @@
 import '../../styles/chat.scss';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import {shortFormatTime} from '../../utils/helper';
 
-const Chat = () => {
+const Chat = ({sessionId, friendName, chats}) => {
+
+    const renderMsg = (msg) => {
+        if(msg.type === 'file') {
+            if(msg.theme === 'audio') {
+                return <audio src={msg.value} controls />
+            } else if(msg.theme === 'image') {
+                return <img alt="msg" style={{width: "100px"}} src={msg.value} />
+            }
+        }
+        return msg.value;
+    };
+
     return (
-        <div className="chat-section">
-            <div className="chat you">
-                <span className="name">
-                    Sample User
-                </span>
-                <p className="message">
-                    This is a preview of a sample message.
-                </p>
-                <span className="time">
-                    10:20 PM
-                </span>
-            </div>
-
-            <div className="chat me">
-                <span className="name">
-                    You
-                </span>
-                <p className="message">
-                    This is a preview of a sample message.
-                </p>
-                <span className="time">
-                    10:20 PM
-                </span>
-            </div>
-        </div>
+        <ScrollToBottom className="chat-section">
+            {chats.map((chat) => (
+                <div key={chat._id} className={`chat ${sessionId === chat.senderId ? "you" : "me"}`}>
+                {sessionId === chat.senderId ? (
+                    <span className="name">
+                        {friendName}
+                    </span>
+                ) : null}
+                    <p className="message">
+                        {renderMsg(chat.msg)}
+                    </p>
+                    <span className="time">
+                        {shortFormatTime(chat.time)}
+                    </span>
+                </div>
+            ))};        
+        </ScrollToBottom>
     )
 }
 

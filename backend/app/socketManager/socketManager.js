@@ -47,7 +47,7 @@ module.exports = (socket) => {
             callback(chatObj);
         });
 
-        socket.on("user-typing", async (data, callBack) => {
+        socket.on("user-typing", async (data, callback) => {
             const {senderId, receiverId, msg} = data;
             const chatObj = {
                 room: [receiverId, senderId],
