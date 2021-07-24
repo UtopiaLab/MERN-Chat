@@ -7,7 +7,6 @@ module.exports = (socket) => {
     try {
         console.log("Connected!");
         socket.on("join-user", (data, callback) => {
-            console.log(callback);
             const {createdAt, name, profileImg, sessionId, updatedAt, _id} = data;
             const currentTime = getTime();
             const newUser = {

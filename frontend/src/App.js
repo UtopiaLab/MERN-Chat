@@ -6,7 +6,7 @@ import AuthContext from './contexts/authContext';
 import SocketContext from './contexts/socketContext';
 import {BASE_URL, LOGIN, USER_LIST} from './utils/apiEndpoints';
 import {postRequest, getRequest} from './utils/apiRequests';
-import {useState, useReducer} from 'react';
+import {useState, useReducer, useEffect} from 'react';
 import {useCookies} from 'react-cookie';
 import io from 'socket.io-client';
 import friendListReducer from './reducers/friendsListReducer';
@@ -34,6 +34,13 @@ function App() {
     friendListReducer,
     initialState
   )
+
+  useEffect(() => {
+    if(userObj && userObj.sessionId) {
+      joinUser(userObj);
+      getFriendsList(userObj);
+    }
+  }, []);
 
   const handleLogin = async (userData) => {
     const formData = new FormData();
@@ -122,7 +129,7 @@ function App() {
           <SocketContext.Provider value={socket}>
             <div className="App">
               <div className="sidebar">
-                <SideBar handleLogout={handleLogout} />
+                <SideBar handleLogout={handleLogout} friendList={friendList} />
               </div>
               <div className="body">
                 <ChatBody />
