@@ -1,5 +1,5 @@
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faSignOutAlt, faUser} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import '../../styles/profile.scss';
 import AuthContext from '../../contexts/authContext';
 import { useContext } from 'react';
@@ -10,7 +10,11 @@ const Profile = ({handleLogout}) => {
     return (
         <div className="profile">
             <div className="img-container">
-                <img alt="profile" src={profileImg} />
+                {profileImg ? (
+                    <img alt="profile" src={profileImg} />
+                ) : (
+                    <FontAwesomeIcon className="icon-block" icon={faUser} />
+                )}
             </div>
             {name}
             <div className="action-item" onClick={handleLogout}>
